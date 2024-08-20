@@ -28,6 +28,7 @@ function onPlayerStateChange(event) {
 
 function updateCaptions() {
   const interval = setInterval(() => {
+    print(currentCaptionIndex)
     const currentTime = Math.floor(player.getCurrentTime()); // 초 단위로 현재 시간을 확인
     if (currentCaptionIndex < captions.length) {
       const currentCaption = captions[currentCaptionIndex];
