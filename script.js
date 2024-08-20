@@ -51,7 +51,7 @@ function updateCaptions() {
         }
         break;
       } else {
-        document.getElementById("caption").innerText = "";
+        document.getElementById("caption").innerText = "임시 자막 임시 자막";
       }
     }
   }, 100); // 0.1초마다 확인 (더 짧은 간격으로 동기화 정확도 향상)
