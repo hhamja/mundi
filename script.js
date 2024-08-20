@@ -46,12 +46,14 @@ function updateCaptions() {
       if (currentTime >= captions[i].start && currentTime <= captions[i].end) {
         if (currentCaptionIndex !== i) {
           currentCaptionIndex = i;
+          document.getElementById("caption").textContent = "This is a caption.";
           document.getElementById("caption").innerText =
             captions[currentCaptionIndex].text;
         }
         break;
       } else {
         document.getElementById("caption").innerText = "임시 자막 임시 자막";
+        document.getElementById("caption").textContent = "임시 자막 임시 자막";
       }
     }
   }, 100); // 0.1초마다 확인 (더 짧은 간격으로 동기화 정확도 향상)
