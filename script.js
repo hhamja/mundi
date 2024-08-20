@@ -29,6 +29,11 @@ function onPlayerStateChange(event) {
     event.data == YT.PlayerState.ENDED
   ) {
     clearInterval(intervalId); // 재생이 중지되면 자막 업데이트 중단
+
+    if (event.data == YT.PlayerState.ENDED) {
+      document.getElementById("caption").innerText = ""; // 동영상이 끝나면 자막 초기화
+      currentCaptionIndex = 0; // 자막 인덱스 초기화
+    }
   }
 }
 
