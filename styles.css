@@ -13,12 +13,17 @@ iframe {
 .captions {
   position: absolute;
   bottom: 10px;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
   text-align: center;
-  color: white;
-  font-size: 18px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  color: #ffffff; /* 글자 색상을 순백색으로 설정 */
+  font-size: 20px; /* 글꼴 크기를 약간 키움 */
+  font-weight: bold; /* 글꼴을 굵게 설정 */
+  background-color: rgba(0, 0, 0, 0.8); /* 배경 색상을 더 어둡게 설정 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1); /* 텍스트 그림자를 더 강하게 설정 */
+  border: 2px solid rgba(255, 255, 255, 0.8); /* 자막 테두리를 추가하여 더 명확하게 보이게 함 */
   pointer-events: none;
   z-index: 10;
+  border-radius: 5px; /* 자막 테두리를 부드럽게 */
 }
