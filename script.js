@@ -46,12 +46,16 @@ function updateCaptions() {
       if (currentTime >= captions[i].start && currentTime <= captions[i].end) {
         if (currentCaptionIndex !== i) {
           currentCaptionIndex = i;
+          document.getElementById("caption").innerHTML =
+            "<strong>Bold Caption</strong>";
           document.getElementById("caption").textContent = "This is a caption.";
           document.getElementById("caption").innerText =
             captions[currentCaptionIndex].text;
         }
         break;
       } else {
+        document.getElementById("caption").innerHTML =
+          "<strong>Bold Caㄴㅇㄹㄴㅇㄹption</strong>";
         document.getElementById("caption").innerText = "임시 자막 임시 자막";
         document.getElementById("caption").textContent = "임시 자막 임시 자막";
       }
