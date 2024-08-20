@@ -1,11 +1,12 @@
 let player;
-const captions = [
+let captions = [
   { start: 0, end: 2, text: "Welcome to the video!" },
   { start: 3, end: 6, text: "This is an example caption." },
   { start: 7, end: 10, text: "Captions appear at the bottom." },
   { start: 11, end: 14, text: "They sync with the video." },
 ];
 let currentCaptionIndex = 0;
+let intervalId;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -23,26 +24,30 @@ function onPlayerReady(event) {
 function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.PLAYING) {
     updateCaptions();
+  } else if (
+    event.data == YT.PlayerState.PAUSED ||
+    event.data == YT.PlayerState.ENDED
+  ) {
+    clearInterval(intervalId); // 재생이 중지되면 자막 업데이트 중단
   }
 }
 
 function updateCaptions() {
-  const interval = setInterval(() => {
-    print(currentCaptionIndex)
-    const currentTime = Math.floor(player.getCurrentTime()); // 초 단위로 현재 시간을 확인
-    if (currentCaptionIndex < captions.length) {
-      const currentCaption = captions[currentCaptionIndex];
-      if (
-        currentTime >= currentCaption.start &&
-        currentTime <= currentCaption.end
-      ) {
-        document.getElementById("caption").innerText = currentCaption.text;
-      } else if (currentTime > currentCaption.end) {
+  intervalId = setInterval(() => {
+    const currentTime = player.getCurrentTime(); // 현재 재생 시간(초)을 가져옴
+
+    // 현재 시간을 기반으로 자막 인덱스를 업데이트
+    for (let i = 0; i < captions.length; i++) {
+      if (currentTime >= captions[i].start && currentTime <= captions[i].end) {
+        if (currentCaptionIndex !== i) {
+          currentCaptionIndex = i;
+          document.getElementById("caption").innerText =
+            captions[currentCaptionIndex].text;
+        }
+        break;
+      } else {
         document.getElementById("caption").innerText = "";
-        currentCaptionIndex++;
       }
-    } else {
-      clearInterval(interval); // 자막이 모두 표시된 후 interval 종료
     }
-  }, 1000); // 1초마다 확인
+  }, 100); // 0.1초마다 확인 (더 짧은 간격으로 동기화 정확도 향상)
 }
