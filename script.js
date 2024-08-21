@@ -81,7 +81,7 @@ function updateCaptions() {
 
     let foundCaption = false;
     for (let i = 0; i < captions.length; i++) {
-      console.log(`Checking caption index ${i}:`, captions[i]); // 현재 인덱스와 자막 객체를 콘솔에 출력
+      console.log(`Caption index ${i}:`, captions[i]); // 현재 인덱스와 자막 객체를 콘솔에 출력
 
       if (currentTime >= captions[i].start && currentTime <= captions[i].end) {
         if (currentCaptionIndex !== i) {
@@ -94,9 +94,8 @@ function updateCaptions() {
     }
 
     if (!foundCaption) {
-      console.log("No caption found for current time."); // 자막이 없을 때 로그 출력
       document.getElementById("caption").innerText = "";
-      currentCaptionIndex = -1;
+      currentCaptionIndex = -1; // 자막이 없을 때 인덱스를 초기화
     }
   }, 100); // 0.1초마다 확인 (더 짧은 간격으로 동기화 정확도 향상)
 }
