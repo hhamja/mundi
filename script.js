@@ -9,6 +9,45 @@ let captions = [
 let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 표시되지 않도록 함
 let intervalId;
 
+// SRT 파일을 로드하여 파싱합니다.
+fetch("./files/output_ko.srt")
+  .then((response) => response.text())
+  .then((data) => {
+    captions = parseSRT(data);
+    onYouTubeIframeAPIReady(); // YouTube API 준비 후 자막 동기화 시작
+  })
+  .catch((error) => console.error("Error loading SRT file:", error));
+
+// SRT 파일 파싱 함수
+function parseSRT(srtContent) {
+  const captions = [];
+  const srtArray = srtContent.split("\n\n");
+
+  srtArray.forEach((entry) => {
+    const lines = entry.split("\n");
+    if (lines.length >= 3) {
+      const times = lines[1].split(" --> ");
+      const start = parseTime(times[0]);
+      const end = parseTime(times[1]);
+      const text = lines.slice(2).join("\n");
+      captions.push({ start, end, text });
+    }
+  });
+
+  return captions;
+}
+
+function parseTime(timeString) {
+  const [hours, minutes, seconds] = timeString.split(":");
+  const [secs, millis] = seconds.split(",");
+  return (
+    parseInt(hours) * 3600 +
+    parseInt(minutes) * 60 +
+    parseInt(secs) +
+    parseInt(millis) / 1000
+  );
+}
+
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
     events: {
