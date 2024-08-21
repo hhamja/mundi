@@ -1,37 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Video with Captions</title>
     <link rel="stylesheet" href="styles.css" />
-    <!-- CSS 파일 연결 -->
+    <script src="script.js"></script>
   </head>
   <body>
     <div class="video-container">
       <iframe
+        id="player"
         width="560"
         height="315"
-        src="https://www.youtube.com/embed/l2Dt9Je7PfI?si=e_cdeuj56oLF-SrU"
+        src="https://www.youtube.com/embed/l2Dt9Je7PfI?enablejsapi=1"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen
       ></iframe>
-      <!-- 
-      <iframe
-        id="player"
-        type="text/html"
-        src="https://www.youtube.com/embed/YOUR_VIDEO_ID?enablejsapi=1"
-        frameborder="0"
-        allowfullscreen
-      ></iframe> -->
-      <div id="caption" class="captions">자막을 표시하는 자리</div>
+      <div id="caption" class="captions"></div>
     </div>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="script.js"></script>
-    <!-- JavaScript 파일 연결 -->
   </body>
 </html>
