@@ -1,29 +1,44 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* 페이지 배경색을 흰색으로 설정 */
+  box-sizing: border-box;
+}
+
 .video-container {
   position: relative;
   width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
+  max-width: 960px; /* 넓은 화면에서도 최대 960px로 제한 */
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 0 20px; /* 좌우 여백 추가 */
+  box-sizing: border-box;
 }
 
 iframe {
   width: 100%;
-  height: 360px;
+  height: auto; /* 반응형으로 높이 자동 조정 */
+  aspect-ratio: 16/9; /* 16:9 비율 유지 */
 }
 
 .captions {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 12px;
+  position: relative;
+  margin-top: 10px; /* 영상과 자막 사이의 간격 설정 */
+  padding: 12px 20px; /* 위아래 패딩을 더 늘려 여유 있게 설정 */
   text-align: center;
-  color: #ffffff; /* 글자 색상을 순백색으로 설정 */
-  font-size: 20px; /* 글꼴 크기를 약간 키움 */
-  font-weight: bold; /* 글꼴을 굵게 설정 */
-  background-color: rgba(0, 0, 0, 0.8); /* 배경 색상을 더 어둡게 설정 */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1); /* 텍스트 그림자를 더 강하게 설정 */
-  border: 2px solid rgba(255, 255, 255, 0.8); /* 자막 테두리를 추가하여 더 명확하게 보이게 함 */
-  pointer-events: none;
-  z-index: 10;
-  border-radius: 5px; /* 자막 테두리를 부드럽게 */
+  color: #ffffff; /* 글자 색상을 흰색으로 설정 */
+  font-size: 18px; /* 글꼴 크기 설정 */
+  font-weight: 500; /* 글꼴을 500 두께로 설정하여 가독성 향상 */
+  font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
+  background-color: #000000; /* 배경 색상을 완전한 검정색으로 설정 */
+  border-radius: 10px; /* 자막 컨테이너 모서리를 부드럽게 둥글게 설정 */
+  max-width: 100%;
+  word-wrap: break-word; /* 긴 텍스트가 여러 줄로 나눠지도록 설정 */
+  white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하여 여러 줄로 표시 */
+  box-sizing: border-box;
 }
