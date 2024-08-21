@@ -29,10 +29,10 @@ iframe {
 .captions {
   position: relative;
   margin-top: 10px; /* 영상과 자막 사이의 간격 설정 */
-  padding: 12px 20px; /* 위아래 패딩을 더 늘려 여유 있게 설정 */
+  padding: 1vw 2vw; /* 패딩을 뷰포트 단위로 설정하여 반응형으로 설정 */
   text-align: center;
   color: #ffffff; /* 글자 색상을 흰색으로 설정 */
-  font-size: 18px; /* 글꼴 크기 설정 */
+  font-size: 2vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
   font-weight: 500; /* 글꼴을 500 두께로 설정하여 가독성 향상 */
   font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
   background-color: #000000; /* 배경 색상을 완전한 검정색으로 설정 */
@@ -41,4 +41,12 @@ iframe {
   word-wrap: break-word; /* 긴 텍스트가 여러 줄로 나눠지도록 설정 */
   white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하여 여러 줄로 표시 */
   box-sizing: border-box;
+}
+
+/* 미디어 쿼리: 더 작은 화면에서는 폰트 크기와 패딩을 줄임 */
+@media (max-width: 600px) {
+  .captions {
+    font-size: 3vw; /* 작은 화면에서 폰트 크기 조정 */
+    padding: 2vw 4vw; /* 패딩을 더 작게 조정 */
+  }
 }
