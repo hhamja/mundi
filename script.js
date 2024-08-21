@@ -1,10 +1,5 @@
 let player;
-let captions = [
-  { start: 0, end: 2, text: "Welcome to the video!" },
-  { start: 2, end: 6, text: "This is an example caption." },
-  { start: 6, end: 10, text: "Captions appear at the bottom." },
-  { start: 10, end: 14, text: "They sync with the video." },
-];
+let captions = [];
 
 let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 표시되지 않도록 함
 let intervalId;
