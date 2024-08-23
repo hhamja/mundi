@@ -5,7 +5,7 @@ let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 �
 let intervalId;
 
 // SRT 파일을 로드하여 파싱합니다.
-fetch("./files/output_ko.srt")
+fetch("./files/output_optimized_ko.srt")
   .then((response) => response.text())
   .then((data) => {
     captions = parseSRT(data);
