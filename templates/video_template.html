@@ -1,0 +1,55 @@
+<!-- templates/video_template.html -->
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Video with Captions</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/script.js"></script>
+  </head>
+  <body>
+    <div class="video-container">
+      <iframe
+        id="player"
+        width="560"
+        height="315"
+        src=""
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+      <div id="caption" class="captions"></div>
+    </div>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoId = urlParams.get("videoId");
+      const testerId = urlParams.get("testerId");
+
+      fetch(`../${testerId}/videos.json`)
+        .then((response) => response.json())
+        .then((data) => {
+          const videoData = data.videos.find((v) => v.id === videoId);
+          if (videoData) {
+            document.getElementById(
+              "player"
+            ).src = `https://www.youtube.com/embed/${videoData.youtubeId}?enablejsapi=1`;
+            loadCaptions(videoData.captionFile);
+          }
+        });
+
+      function loadCaptions(captionFile) {
+        fetch(`../${testerId}/files/${captionFile}`)
+          .then((response) => response.text())
+          .then((data) => {
+            captions = parseSRT(data);
+            onYouTubeIframeAPIReady(); // YouTube API 준비 후 자막 동기화 시작
+          })
+          .catch((error) => console.error("Error loading SRT file:", error));
+      }
+    </script>
+  </body>
+</html>
