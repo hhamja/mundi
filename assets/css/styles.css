@@ -3,21 +3,28 @@ html {
   margin: 0;
   padding: 0;
   width: 100%;
+  height: 100vh;
+  background-color: #000000;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.container {
+  width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff; /* 페이지 배경색을 흰색으로 설정 */
-  box-sizing: border-box;
+  flex-direction: column;
 }
 
 .video-container {
-  position: relative;
   width: 100%;
-  max-width: 960px; /* 넓은 화면에서도 최대 960px로 제한 */
-  margin: 0 auto; /* 중앙 정렬 */
-  padding-top: 56.25%; /* 16:9 비율을 유지하기 위한 패딩 */
-  box-sizing: border-box;
+  height: 85%;
+  background-color: #000000;
+}
+
+.video-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 iframe {
@@ -26,34 +33,91 @@ iframe {
   left: 0;
   width: 100%;
   height: 100%;
-  border: 0; /* 불필요한 경계선을 제거 */
+  border: 0;
 }
 
 .captions {
-  position: absolute; /* 자막을 절대 위치로 설정하여 비디오 위에 오버랩 */
-  bottom: 20px; /* 비디오 하단에서 20px 위에 위치 */
-  left: 50%; /* 가로 중앙 정렬 */
-  transform: translateX(-50%); /* 자막을 가로 중앙으로 이동 */
-  margin: 0 auto;
-  padding: 1vw 2vw; /* 패딩을 뷰포트 단위로 설정하여 반응형으로 설정 */
+  width: 100%;
+  height: 15%;
+  padding: 10px;
   text-align: center;
-  color: #ffffff; /* 글자 색상을 흰색으로 설정 */
-  font-size: 1.5vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
-  font-weight: 400; /* 글꼴을 400 두께로 설정 */
-  font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
-  background-color: transparent; /* 배경 색상을 투명으로 설정 */
-  border-radius: 0px; /* 자막 컨테이너 모서리를 둥글게 하지 않음 */
-  width: 90%; /* 자막의 너비를 비디오와 거의 동일하게 설정 */
-  max-width: 90%; /* 자막의 최대 너비를 90%로 제한 */
-  word-wrap: break-word; /* 긴 텍스트가 여러 줄로 나눠지도록 설정 */
-  white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하여 여러 줄로 표시 */
+  color: #ffffff;
+  font-size: clamp(16px, 2vw, 30px);
+  line-height: 1.4;
+  background-color: #000000;
   box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 미디어 쿼리: 더 작은 화면에서는 폰트 크기와 패딩을 줄임 */
-@media (max-width: 600px) {
+/* 모바일 세로 모드 디자인 */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .container {
+    height: auto;
+  }
+
+  .video-container {
+    height: auto;
+    background-color: #000000;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 비율 유지 */
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .captions {
-    font-size: 3vw; /* 작은 화면에서 폰트 크기 조정 */
-    padding: 1vw 2vw; /* 패딩을 더 작게 조정 */
+    height: auto;
+    min-height: 60px;
+    padding: 8px;
+    font-size: clamp(11px, 3.2vw, 17px);
+    line-height: 1.3;
+  }
+}
+
+/* 모바일 가로 모드 디자인 */
+@media screen and (max-width: 915px) and (orientation: landscape) {
+  .container {
+    height: 100vh;
+  }
+
+  .video-container {
+    width: 100%;
+    height: 80%;
+    background-color: #000000;
+  }
+
+  .video-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .captions {
+    width: 100%;
+    height: 20%;
+    padding: 5px;
+    font-size: clamp(12px, 2.5vw, 20px);
+    line-height: 1.3;
   }
 }
