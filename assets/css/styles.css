@@ -38,7 +38,7 @@ iframe {
   padding: 1vw 2vw; /* 패딩을 뷰포트 단위로 설정하여 반응형으로 설정 */
   text-align: center;
   color: #ffffff; /* 글자 색상을 흰색으로 설정 */
-  font-size: 2vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
+  font-size: 1.5vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
   font-weight: 400; /* 글꼴을 400 두께로 설정 */
   font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
   background-color: transparent; /* 배경 색상을 투명으로 설정 */
@@ -53,7 +53,7 @@ iframe {
 /* 미디어 쿼리: 더 작은 화면에서는 폰트 크기와 패딩을 줄임 */
 @media (max-width: 600px) {
   .captions {
-    font-size: 4vw; /* 작은 화면에서 폰트 크기 조정 */
-    padding: 2vw 3vw; /* 패딩을 더 작게 조정 */
+    font-size: 3vw; /* 작은 화면에서 폰트 크기 조정 */
+    padding: 1vw 2vw; /* 패딩을 더 작게 조정 */
   }
 }
