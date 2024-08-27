@@ -2,6 +2,12 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <script>
+      function onYouTubeIframeAPIReady() {
+        console.log("YouTube IFrame API is ready");
+        initializePlayer();
+      }
+    </script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,12 +29,36 @@
         ></iframe>
       </div>
       <div id="caption" class="captions"></div>
+      <div id="loadingIndicator" class="loading-indicator">자막 로딩 중...</div>
+      <div id="caption" class="captions loading"></div>
     </div>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const userName = urlParams.get("userName");
       const youtubeId = urlParams.get("youtubeId");
 
+      function loadCaptions(userName, youtubeId) {
+        document.getElementById("loadingIndicator").style.display = "block";
+        document.getElementById("caption").classList.add("loading");
+
+        fetch(`../${userName}/${youtubeId}.srt`)
+          .then((response) => response.text())
+          .then((data) => {
+            console.log("Captions loaded, parsing SRT");
+            captions = parseSRT(data);
+            console.log("Captions parsed, count:", captions.length);
+            document.getElementById("loadingIndicator").style.display = "none";
+            document.getElementById("caption").classList.remove("loading");
+            updateCaptions();
+          })
+          .catch((error) => {
+            console.error("Error loading SRT file:", error);
+            document.getElementById("loadingIndicator").style.display = "none";
+            document.getElementById("caption").classList.remove("loading");
+            document.getElementById("caption").innerText =
+              "자막을 불러오는 데 실패했습니다.";
+          });
+      }
       // 중앙 JSON 파일에서 데이터 로드
       fetch("../users_videos.json")
         .then((response) => response.json())

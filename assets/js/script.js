@@ -4,14 +4,25 @@ let captions = [];
 let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 표시되지 않도록 함
 let intervalId;
 
-// SRT 파일을 로드하여 파싱합니다.
+console.log("Script started loading");
+
 fetch("./files/output_final.srt")
-  .then((response) => response.text())
+  .then((response) => {
+    console.log("SRT file fetch response received");
+    return response.text();
+  })
   .then((data) => {
+    console.log("SRT file data received, length:", data.length);
     captions = parseSRT(data);
-    onYouTubeIframeAPIReady(); // YouTube API 준비 후 자막 동기화 시작
+    console.log("Captions parsed, count:", captions.length);
+    onYouTubeIframeAPIReady();
   })
   .catch((error) => console.error("Error loading SRT file:", error));
+
+function onPlayerReady(event) {
+  console.log("Player is ready!");
+  updateCaptions();
+}
 
 // SRT 파일 파싱 함수
 function parseSRT(srtContent) {
@@ -50,11 +61,6 @@ function onYouTubeIframeAPIReady() {
       onStateChange: onPlayerStateChange,
     },
   });
-}
-
-function onPlayerReady(event) {
-  console.log("Player is ready!");
-  updateCaptions();
 }
 
 function onPlayerStateChange(event) {
