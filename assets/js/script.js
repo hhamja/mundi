@@ -6,19 +6,6 @@ let intervalId;
 
 console.log("Script started loading");
 
-fetch("./files/output_final.srt")
-  .then((response) => {
-    console.log("SRT file fetch response received");
-    return response.text();
-  })
-  .then((data) => {
-    console.log("SRT file data received, length:", data.length);
-    captions = parseSRT(data);
-    console.log("Captions parsed, count:", captions.length);
-    onYouTubeIframeAPIReady();
-  })
-  .catch((error) => console.error("Error loading SRT file:", error));
-
 function onPlayerReady(event) {
   console.log("Player is ready!");
   updateCaptions();
