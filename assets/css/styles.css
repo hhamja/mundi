@@ -30,17 +30,21 @@ iframe {
 }
 
 .captions {
-  position: relative;
-  margin-top: 10px; /* 영상과 자막 사이의 간격 설정 */
+  position: absolute; /* 자막을 절대 위치로 설정하여 비디오 위에 오버랩 */
+  bottom: 20px; /* 비디오 하단에서 20px 위에 위치 */
+  left: 50%; /* 가로 중앙 정렬 */
+  transform: translateX(-50%); /* 자막을 가로 중앙으로 이동 */
+  margin: 0 auto;
   padding: 1vw 2vw; /* 패딩을 뷰포트 단위로 설정하여 반응형으로 설정 */
   text-align: center;
   color: #ffffff; /* 글자 색상을 흰색으로 설정 */
   font-size: 2vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
   font-weight: 500; /* 글꼴을 500 두께로 설정하여 가독성 향상 */
   font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
-  background-color: #000000; /* 배경 색상을 완전한 검정색으로 설정 */
-  border-radius: 10px; /* 자막 컨테이너 모서리를 부드럽게 둥글게 설정 */
-  max-width: 100%;
+  background-color: transparent; /* 배경 색상을 투명으로 설정 */
+  border-radius: 0px; /* 자막 컨테이너 모서리를 둥글게 하지 않음 */
+  width: 100%; /* 자막의 너비를 비디오와 동일하게 설정 */
+  max-width: 100%; /* 자막의 최대 너비를 100%로 제한 */
   word-wrap: break-word; /* 긴 텍스트가 여러 줄로 나눠지도록 설정 */
   white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하여 여러 줄로 표시 */
   box-sizing: border-box;
