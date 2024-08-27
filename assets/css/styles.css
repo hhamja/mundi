@@ -16,14 +16,17 @@ html {
   width: 100%;
   max-width: 960px; /* 넓은 화면에서도 최대 960px로 제한 */
   margin: 0 auto; /* 중앙 정렬 */
-  padding: 0 20px; /* 좌우 여백 추가 */
+  padding-top: 56.25%; /* 16:9 비율을 유지하기 위한 패딩 */
   box-sizing: border-box;
 }
 
 iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto; /* 반응형으로 높이 자동 조정 */
-  aspect-ratio: 16/9; /* 16:9 비율 유지 */
+  height: 100%;
+  border: 0; /* 불필요한 경계선을 제거 */
 }
 
 .captions {
@@ -46,7 +49,7 @@ iframe {
 /* 미디어 쿼리: 더 작은 화면에서는 폰트 크기와 패딩을 줄임 */
 @media (max-width: 600px) {
   .captions {
-    font-size: 3vw; /* 작은 화면에서 폰트 크기 조정 */
-    padding: 2vw 4vw; /* 패딩을 더 작게 조정 */
+    font-size: 4vw; /* 작은 화면에서 폰트 크기 조정 */
+    padding: 2vw 3vw; /* 패딩을 더 작게 조정 */
   }
 }
