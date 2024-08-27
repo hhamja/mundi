@@ -43,8 +43,8 @@ iframe {
   font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
   background-color: transparent; /* 배경 색상을 투명으로 설정 */
   border-radius: 0px; /* 자막 컨테이너 모서리를 둥글게 하지 않음 */
-  width: 100%; /* 자막의 너비를 비디오와 동일하게 설정 */
-  max-width: 100%; /* 자막의 최대 너비를 100%로 제한 */
+  width: 90%; /* 자막의 너비를 비디오와 거의 동일하게 설정 */
+  max-width: 90%; /* 자막의 최대 너비를 90%로 제한 */
   word-wrap: break-word; /* 긴 텍스트가 여러 줄로 나눠지도록 설정 */
   white-space: pre-wrap; /* 줄 바꿈 및 공백을 유지하여 여러 줄로 표시 */
   box-sizing: border-box;
