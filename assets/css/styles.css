@@ -39,7 +39,7 @@ iframe {
   text-align: center;
   color: #ffffff; /* 글자 색상을 흰색으로 설정 */
   font-size: 2vw; /* 폰트 크기를 뷰포트 너비에 비례하여 설정 */
-  font-weight: 500; /* 글꼴을 500 두께로 설정하여 가독성 향상 */
+  font-weight: 400; /* 글꼴을 400 두께로 설정 */
   font-family: "Noto Sans KR", sans-serif; /* 폰트를 Noto Sans KR로 고정 */
   background-color: transparent; /* 배경 색상을 투명으로 설정 */
   border-radius: 0px; /* 자막 컨테이너 모서리를 둥글게 하지 않음 */
