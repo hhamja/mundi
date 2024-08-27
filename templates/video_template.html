@@ -26,23 +26,29 @@
     </div>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
-      const videoId = urlParams.get("videoId");
-      const testerId = urlParams.get("testerId");
+      const userName = urlParams.get("userName");
+      const youtubeId = urlParams.get("youtubeId");
 
-      fetch(`../${testerId}/videos.json`)
+      // 중앙 JSON 파일에서 데이터 로드
+      fetch("../users_videos.json")
         .then((response) => response.json())
         .then((data) => {
-          const videoData = data.videos.find((v) => v.id === videoId);
-          if (videoData) {
+          if (data[userName] && data[userName].includes(youtubeId)) {
             document.getElementById(
               "player"
-            ).src = `https://www.youtube.com/embed/${videoData.youtubeId}?enablejsapi=1`;
-            loadCaptions(videoData.captionFile);
+            ).src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
+            loadCaptions(userName, youtubeId);
+          } else {
+            console.error("Video not found for this user.");
           }
-        });
+        })
+        .catch((error) =>
+          console.error("Error loading user videos data:", error)
+        );
 
-      function loadCaptions(captionFile) {
-        fetch(`../${testerId}/files/${captionFile}`)
+      // 자막 파일 로드 함수
+      function loadCaptions(userName, youtubeId) {
+        fetch(`../${userName}/${youtubeId}.srt`)
           .then((response) => response.text())
           .then((data) => {
             captions = parseSRT(data);
