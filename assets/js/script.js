@@ -37,50 +37,56 @@ function parseTime(timeString) {
 
 // 자막 로드 함수
 function loadCaptions(userName, youtubeId) {
-  document.getElementById("loadingIndicator").style.display = "block";
+  return new Promise((resolve, reject) => {
+    document.getElementById("loadingIndicator").style.display = "block";
 
-  fetch(`../${userName}/${youtubeId}.srt`)
-    .then((response) => response.text())
-    .then((data) => {
-      console.log("Captions loaded, parsing SRT");
-      captions = parseSRT(data);
-      console.log("Captions parsed, count:", captions.length);
-      document.getElementById("loadingIndicator").style.display = "none";
-    })
-    .catch((error) => {
-      console.error("Error loading SRT file:", error);
-      document.getElementById("loadingIndicator").style.display = "none";
-      document.getElementById("caption").innerText =
-        "자막을 불러오는 데 실패했습니다.";
-    });
+    fetch(`../${userName}/${youtubeId}.srt`)
+      .then((response) => response.text())
+      .then((data) => {
+        console.log("Captions loaded, parsing SRT");
+        captions = parseSRT(data);
+        console.log("Captions parsed, count:", captions.length);
+        document.getElementById("loadingIndicator").style.display = "none";
+        resolve(); // 자막 로드 완료
+      })
+      .catch((error) => {
+        console.error("Error loading SRT file:", error);
+        document.getElementById("loadingIndicator").style.display = "none";
+        document.getElementById("caption").innerText =
+          "자막을 불러오는 데 실패했습니다.";
+        reject(error); // 자막 로드 실패
+      });
+  });
 }
 
-// 유튜브 API 로드 후 호출될 함수
-function onYouTubeIframeAPIReady() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const userName = urlParams.get("userName");
-  const youtubeId = urlParams.get("youtubeId");
+// 유튜브 API 초기화 함수
+function initializeYouTubePlayer(userName, youtubeId) {
+  return new Promise((resolve, reject) => {
+    fetch("../users_videos.json")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data[userName] && data[userName].includes(youtubeId)) {
+          document.getElementById(
+            "player"
+          ).src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
 
-  fetch("../users_videos.json")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data[userName] && data[userName].includes(youtubeId)) {
-        document.getElementById(
-          "player"
-        ).src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
-
-        loadCaptions(userName, youtubeId); // 자막을 먼저 로드
-        player = new YT.Player("player", {
-          events: {
-            onReady: onPlayerReady,
-            onStateChange: onPlayerStateChange,
-          },
-        });
-      } else {
-        console.error("Video not found for this user.");
-      }
-    })
-    .catch((error) => console.error("Error loading user videos data:", error));
+          player = new YT.Player("player", {
+            events: {
+              onReady: onPlayerReady,
+              onStateChange: onPlayerStateChange,
+            },
+          });
+          resolve(); // 유튜브 플레이어 초기화 완료
+        } else {
+          console.error("Video not found for this user.");
+          reject(new Error("Video not found"));
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading user videos data:", error);
+        reject(error); // 유튜브 플레이어 초기화 실패
+      });
+  });
 }
 
 // 유튜브 플레이어가 준비되었을 때 호출될 함수
@@ -155,12 +161,17 @@ function toggleCaptionStyle(isFullscreen) {
   }
 }
 
-// URL 파라미터에서 사용자명과 유튜브 ID 가져오기
-const urlParams = new URLSearchParams(window.location.search);
-const userName = urlParams.get("userName");
-const youtubeId = urlParams.get("youtubeId");
-
 // JSON 파일에서 데이터 로드 및 유튜브 영상과 자막 초기화
-window.addEventListener("load", () => {
-  onYouTubeIframeAPIReady();
+window.addEventListener("load", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get("userName");
+  const youtubeId = urlParams.get("youtubeId");
+
+  // 비동기로 유튜브 플레이어와 자막 로드
+  try {
+    await initializeYouTubePlayer(userName, youtubeId);
+    await loadCaptions(userName, youtubeId);
+  } catch (error) {
+    console.error("An error occurred during initialization:", error);
+  }
 });
