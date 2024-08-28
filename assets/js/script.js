@@ -1,15 +1,8 @@
+// 전역 변수 선언
 let player;
 let captions = [];
-
 let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 표시되지 않도록 함
 let intervalId;
-
-console.log("Script started loading");
-
-function onPlayerReady(event) {
-  console.log("Player is ready!");
-  updateCaptions();
-}
 
 // SRT 파일 파싱 함수
 function parseSRT(srtContent) {
@@ -30,6 +23,7 @@ function parseSRT(srtContent) {
   return captions;
 }
 
+// 시간 문자열을 초 단위로 변환하는 함수
 function parseTime(timeString) {
   const [hours, minutes, seconds] = timeString.split(":");
   const [secs, millis] = seconds.split(",");
@@ -41,31 +35,77 @@ function parseTime(timeString) {
   );
 }
 
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("player", {
-    events: {
-      onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange,
-    },
-  });
+// 자막 로드 함수
+function loadCaptions(userName, youtubeId) {
+  document.getElementById("loadingIndicator").style.display = "block";
+
+  fetch(`../${userName}/${youtubeId}.srt`)
+    .then((response) => response.text())
+    .then((data) => {
+      console.log("Captions loaded, parsing SRT");
+      captions = parseSRT(data);
+      console.log("Captions parsed, count:", captions.length);
+      document.getElementById("loadingIndicator").style.display = "none";
+    })
+    .catch((error) => {
+      console.error("Error loading SRT file:", error);
+      document.getElementById("loadingIndicator").style.display = "none";
+      document.getElementById("caption").innerText =
+        "자막을 불러오는 데 실패했습니다.";
+    });
 }
 
-function onPlayerStateChange(event) {
-  if (event.data == YT.PlayerState.PLAYING) {
-    updateCaptions();
-  } else if (
-    event.data == YT.PlayerState.PAUSED ||
-    event.data == YT.PlayerState.ENDED
-  ) {
-    clearInterval(intervalId);
+// 유튜브 API 로드 후 호출될 함수
+function onYouTubeIframeAPIReady() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get("userName");
+  const youtubeId = urlParams.get("youtubeId");
 
-    if (event.data == YT.PlayerState.ENDED) {
-      document.getElementById("caption").innerText = ""; // 동영상이 끝나면 자막 초기화
-      currentCaptionIndex = -1; // 자막 인덱스 초기화
-    }
+  fetch("../users_videos.json")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data[userName] && data[userName].includes(youtubeId)) {
+        document.getElementById(
+          "player"
+        ).src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`;
+
+        loadCaptions(userName, youtubeId); // 자막을 먼저 로드
+        player = new YT.Player("player", {
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+          },
+        });
+      } else {
+        console.error("Video not found for this user.");
+      }
+    })
+    .catch((error) => console.error("Error loading user videos data:", error));
+}
+
+// 유튜브 플레이어가 준비되었을 때 호출될 함수
+function onPlayerReady(event) {
+  console.log("Player is ready!");
+  updateCaptions(); // 초기 자막 업데이트
+  player.addEventListener("onStateChange", onPlayerStateChange);
+  player.addEventListener("onTimeUpdate", updateCaptions); // 시간 업데이트 시 자막 업데이트
+}
+
+// 유튜브 플레이어 상태가 변경될 때 호출될 함수
+function onPlayerStateChange(event) {
+  if (
+    event.data == YT.PlayerState.PLAYING ||
+    event.data == YT.PlayerState.PAUSED
+  ) {
+    updateCaptions();
+  } else if (event.data == YT.PlayerState.ENDED) {
+    clearInterval(intervalId);
+    document.getElementById("caption").innerText = ""; // 동영상이 끝나면 자막 초기화
+    currentCaptionIndex = -1; // 자막 인덱스 초기화
   }
 }
 
+// 자막 업데이트 함수
 function updateCaptions() {
   clearInterval(intervalId); // 기존 인터벌을 초기화하여 중복 실행 방지
   intervalId = setInterval(() => {
@@ -74,8 +114,6 @@ function updateCaptions() {
 
     let foundCaption = false;
     for (let i = 0; i < captions.length; i++) {
-      console.log(`Caption index ${i}:`, captions[i]); // 현재 인덱스와 자막 객체를 콘솔에 출력
-
       if (currentTime >= captions[i].start && currentTime <= captions[i].end) {
         if (currentCaptionIndex !== i) {
           currentCaptionIndex = i;
@@ -92,3 +130,37 @@ function updateCaptions() {
     }
   }, 100); // 0.1초마다 확인 (더 짧은 간격으로 동기화 정확도 향상)
 }
+
+// 전체 화면 변경 감지 이벤트 핸들러
+document.addEventListener("fullscreenchange", () => {
+  const isFullscreen = document.fullscreenElement != null;
+  toggleCaptionStyle(isFullscreen);
+});
+
+// 전체 화면일 때 자막 스타일을 변경하는 함수
+function toggleCaptionStyle(isFullscreen) {
+  const captionElement = document.getElementById("caption");
+  if (isFullscreen) {
+    captionElement.style.position = "absolute";
+    captionElement.style.bottom = "50px";
+    captionElement.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    captionElement.style.width = "100%";
+    captionElement.style.left = "0";
+  } else {
+    captionElement.style.position = "";
+    captionElement.style.bottom = "";
+    captionElement.style.backgroundColor = "";
+    captionElement.style.width = "";
+    captionElement.style.left = "";
+  }
+}
+
+// URL 파라미터에서 사용자명과 유튜브 ID 가져오기
+const urlParams = new URLSearchParams(window.location.search);
+const userName = urlParams.get("userName");
+const youtubeId = urlParams.get("youtubeId");
+
+// JSON 파일에서 데이터 로드 및 유튜브 영상과 자막 초기화
+window.addEventListener("load", () => {
+  onYouTubeIframeAPIReady();
+});
