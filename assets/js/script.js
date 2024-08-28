@@ -3,6 +3,8 @@ let player;
 let captions = [];
 let currentCaptionIndex = -1; // 처음에 -1로 설정하여 처음 자막이 표시되지 않도록 함
 let intervalId;
+let captionsLoaded = false; // 자막 로드 완료 여부
+let playerReady = false; // 플레이어 준비 완료 여부
 
 // SRT 파일 파싱 함수
 function parseSRT(srtContent) {
@@ -47,7 +49,9 @@ function loadCaptions(userName, youtubeId) {
         captions = parseSRT(data);
         console.log("Captions parsed, count:", captions.length);
         document.getElementById("loadingIndicator").style.display = "none";
+        captionsLoaded = true; // 자막 로드 완료 플래그 설정
         resolve(); // 자막 로드 완료
+        checkAndStartCaptions(); // 자막과 플레이어가 준비되었는지 확인하고 업데이트 시작
       })
       .catch((error) => {
         console.error("Error loading SRT file:", error);
@@ -72,11 +76,14 @@ function initializeYouTubePlayer(userName, youtubeId) {
 
           player = new YT.Player("player", {
             events: {
-              onReady: onPlayerReady,
+              onReady: () => {
+                playerReady = true; // 플레이어 준비 완료 플래그 설정
+                resolve(); // 플레이어 초기화 완료
+                checkAndStartCaptions(); // 자막과 플레이어가 준비되었는지 확인하고 업데이트 시작
+              },
               onStateChange: onPlayerStateChange,
             },
           });
-          resolve(); // 유튜브 플레이어 초기화 완료
         } else {
           console.error("Video not found for this user.");
           reject(new Error("Video not found"));
@@ -89,12 +96,12 @@ function initializeYouTubePlayer(userName, youtubeId) {
   });
 }
 
-// 유튜브 플레이어가 준비되었을 때 호출될 함수
-function onPlayerReady(event) {
-  console.log("Player is ready!");
-  updateCaptions(); // 초기 자막 업데이트
-  player.addEventListener("onStateChange", onPlayerStateChange);
-  player.addEventListener("onTimeUpdate", updateCaptions); // 시간 업데이트 시 자막 업데이트
+// 자막과 플레이어가 모두 준비되었는지 확인하고 자막 업데이트 시작
+function checkAndStartCaptions() {
+  if (captionsLoaded && playerReady) {
+    updateCaptions(); // 자막과 플레이어가 모두 준비되었을 때 자막 업데이트 시작
+    player.addEventListener("onTimeUpdate", updateCaptions); // 시간 업데이트 시 자막 업데이트
+  }
 }
 
 // 유튜브 플레이어 상태가 변경될 때 호출될 함수
